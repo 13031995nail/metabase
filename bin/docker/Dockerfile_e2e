@@ -1,0 +1,33 @@
+# E2E test build of Metabase with license stub enabled
+# Use this image for local enterprise feature testing without actual licenses
+
+ARG BASE_IMAGE=eclipse-temurin:25-jre-alpine
+
+FROM ${BASE_IMAGE}
+
+ENV FC_LANG=en-US LC_CTYPE=en_US.UTF-8
+ENV MB_LICENSE_STUB_ENABLED=true
+ENV MB_LICENSE_STUB_PROFILE=self-hosted
+
+# copy cert before RUN so keytool can import it
+COPY bin/docker/DigiCertGlobalRootG2.crt.pem /app/certs/DigiCertGlobalRootG2.crt.pem
+
+# dependencies
+RUN apk add -U bash fontconfig curl font-noto font-noto-arabic font-noto-hebrew font-noto-cjk font-noto-thai java-cacerts && \
+    apk upgrade && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /app/certs && \
+    curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /app/certs/rds-combined-ca-bundle.pem  && \
+    /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias aws-rds -file /app/certs/rds-combined-ca-bundle.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit && \
+    /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias azure-cert -file /app/certs/DigiCertGlobalRootG2.crt.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit && \
+    mkdir -p /plugins && chmod a+rwx /plugins
+
+# add Metabase jar & add our run script to the image
+COPY target/uberjar/metabase.jar /app/metabase.jar
+COPY bin/docker/run_metabase.sh /app/run_metabase.sh
+
+# expose our default runtime port
+EXPOSE 3000
+
+# run it
+ENTRYPOINT ["/app/run_metabase.sh"]
