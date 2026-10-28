@@ -7,13 +7,13 @@ import { getBaseColorsForThemeDefinitionOnly } from "./base-colors";
 const baseColors = getBaseColorsForThemeDefinitionOnly();
 
 export const DEFAULT_ACCENT_COLORS: ChartColorV2[] = [
-  "#509EE3", // accent0 - blue
-  "#88BF4D", // accent1 - green
-  "#A989C5", // accent2 - purple
-  "#EF8C8C", // accent3 - red
-  "#F9D45C", // accent4 - yellow
-  "#F2A86F", // accent5 - orange
-  "#98D9D9", // accent6 - cyan
+  "#0039A6", // accent0 - corporate deep blue
+  "#FF6B00", // accent1 - corporate orange
+  "#00A3E0", // accent2 - sky blue
+  "#0072CE", // accent3 - bright blue
+  "#FF9E1B", // accent4 - amber orange
+  "#509EE3", // accent5 - soft cyan blue
+  "#4A777A", // accent6 - teal
   "#7172AD", // accent7 - indigo
 ];
 

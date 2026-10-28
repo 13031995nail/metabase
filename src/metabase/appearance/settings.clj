@@ -178,7 +178,7 @@ See [fonts](../configuring-metabase/fonts.md).")
 (defn application-color
   "The primary color, a.k.a. brand color"
   []
-  (or (:brand (application-colors)) "#509EE3"))
+  (or (:brand (application-colors)) "#0039A6"))
 
 (defn secondary-chart-color
   "The first 'Additional chart color'"
